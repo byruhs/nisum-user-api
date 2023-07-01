@@ -45,7 +45,6 @@ public class UserRequest implements Serializable {
             position = 3
     )
     @NotEmpty(message = "Password es Requerido.")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=*])(?=\\S+$).{8,}$" ,message = "Password no cumple criterios minimos")
     @JsonProperty("password")
     private String password;
 

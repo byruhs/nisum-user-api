@@ -3,14 +3,18 @@ package com.nisum.userapi.serviceImpl;
 import com.nisum.userapi.domain.entity.PhoneEntity;
 import com.nisum.userapi.domain.request.UserRequest;
 import com.nisum.userapi.domain.entity.UserEntity;
+import com.nisum.userapi.exception.InvalidPasswordException;
 import com.nisum.userapi.exception.UserException;
 import com.nisum.userapi.repository.UserRepository;
 import com.nisum.userapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,14 +22,18 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    @Value("${pasword.regexp}")
+    private String paswordRegexp;
+
     @Autowired
     public UserServiceImpl(final UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    public UserEntity save(final UserRequest userRequest) throws UserException {
+    public UserEntity save(final UserRequest userRequest) throws UserException, InvalidPasswordException {
         validEmail(userRequest.getEmail());
+        validPassword(userRequest.getPassword());
 
         UserEntity userEntity = new UserEntity();
         userEntity.setName(userRequest.getName());
@@ -44,6 +52,19 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> user = userRepository.findUserEntityByEmail(email);
         if (user.isPresent()) {
             throw new UserException("El correo ya registrado");
+        }
+    }
+
+    private void validPassword(final String password) throws InvalidPasswordException {
+        Pattern pattern = Pattern.compile(paswordRegexp);
+        Matcher matcher = pattern.matcher(password);
+        if (!matcher.matches()) {
+            throw new InvalidPasswordException("La contraseña debe cumplir los siguientes criterios: " +
+                    "Contener al menos un número (0-9). " +
+                    "Contener al menos una letra minúscula. " +
+                    "Contener al menos una letra mayúscula. " +
+                    "No contener espacios en blanco. " +
+                    "Tener una longitud de entre 8 y 20 caracteres. ");
         }
     }
 

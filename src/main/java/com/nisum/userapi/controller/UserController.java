@@ -4,6 +4,7 @@ import com.nisum.userapi.domain.response.UserResponse;
 import com.nisum.userapi.domain.entity.UserEntity;
 import com.nisum.userapi.domain.request.UserRequest;
 import com.nisum.userapi.domain.response.ApiResponse;
+import com.nisum.userapi.exception.InvalidPasswordException;
 import com.nisum.userapi.exception.UserException;
 import com.nisum.userapi.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +31,7 @@ public class UserController {
 
     @ApiOperation(value = "Registra un usuario", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse<UserResponse>> save(@Valid @RequestBody final UserRequest userRequest) throws UserException{
+    public ResponseEntity<ApiResponse<UserResponse>> save(@Valid @RequestBody final UserRequest userRequest) throws UserException, InvalidPasswordException {
         UserEntity userCreated = userService.save(userRequest);
         UserResponse userResponse = new UserResponse(userCreated);
 
