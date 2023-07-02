@@ -3,6 +3,7 @@ package com.nisum.userapi.config;
 import com.nisum.userapi.domain.response.ErrorResponse;
 import com.nisum.userapi.exception.InvalidPasswordException;
 import com.nisum.userapi.exception.UserException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,11 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class GlobalExceptionConfig implements Serializable {
+public class GlobalExceptionHandler implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,24 +23,21 @@ public class GlobalExceptionConfig implements Serializable {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleBusinessException(final Exception ex) {
-        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                ex.getMessage(), Objects.isNull(ex.getCause()) ? "" : ex.getCause().getMessage());
+        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
     }
 
     @ResponseBody
     @ExceptionHandler(UserException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleBusinessException(final UserException ex) {
-        return new ErrorResponse(HttpStatus.CONFLICT.value(),
-                ex.getMessage(), Objects.isNull(ex.getCause()) ? "" : ex.getCause().getMessage());
+        return new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage());
     }
 
     @ResponseBody
     @ExceptionHandler(InvalidPasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBusinessException(final InvalidPasswordException ex) {
-        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(), Objects.isNull(ex.getCause()) ? "" : ex.getCause().getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
     }
 
     @ResponseBody
@@ -48,8 +45,7 @@ public class GlobalExceptionConfig implements Serializable {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException ex) {
         return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "El módelo no es válido.", ex.getBindingResult().getAllErrors().stream()
-                .map(e -> e.getDefaultMessage()).collect(Collectors.joining(", ")));
+                ex.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(", ")));
     }
 
 }
