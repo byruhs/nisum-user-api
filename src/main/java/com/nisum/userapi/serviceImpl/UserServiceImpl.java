@@ -25,16 +25,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Value("${pasword.regexp}")
-    private String paswordRegexp;
-
+    private final String paswordRegexp;
     private final JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    public UserServiceImpl(final UserRepository userRepository, JwtTokenUtil jwtTokenUtil) {
+    public UserServiceImpl(final UserRepository userRepository, JwtTokenUtil jwtTokenUtil, @Value("${pasword.regexp}") String paswordRegexp) {
         this.userRepository = userRepository;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.paswordRegexp = paswordRegexp;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 

@@ -1,5 +1,6 @@
 package com.nisum.userapi.serviceImpl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,12 +12,14 @@ import java.util.ArrayList;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
+    private final String defaultUsername;
+    private final String defaultPassword;
 
-    @Value("${jwt.username}")
-    private String defaultUsername;
-
-    @Value("${jwt.password}")
-    private String defaultPassword;
+    @Autowired
+    public JwtUserDetailsService(@Value("${jwt.username}") String defaultUsername, @Value("${jwt.password}") String defaultPassword) {
+        this.defaultUsername = defaultUsername;
+        this.defaultPassword = defaultPassword;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

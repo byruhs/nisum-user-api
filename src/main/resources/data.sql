@@ -12,7 +12,7 @@ CREATE TABLE users (
 
 );
 
-DROP TABLE IF EXISTS phoneEntities;
+DROP TABLE IF EXISTS phones;
 CREATE TABLE phones(
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id UUID NOT NULL,

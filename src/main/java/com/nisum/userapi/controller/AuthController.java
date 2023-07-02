@@ -37,7 +37,7 @@ public class AuthController {
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
         authenticate(authRequest.getUsername(), authRequest.getPassword());
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
-        final String token = jwtTokenUtil.generateToken(userDetails);
+        final String token = jwtTokenUtil.generateToken(userDetails.getUsername());
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
