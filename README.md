@@ -31,7 +31,7 @@ La documentacion del API Rest se encuentra en Swagger:
 
 http://localhost:8080/swagger-ui/index.html
 
-![image](https://github.com/byruhs/nisum-user-api/blob/main/imgs/swagger?raw=true)
+![image](https://github.com/byruhs/nisum-user-api/blob/main/imgs/swagger.png?raw=true)
 
 ### /authenticate
 Obtiene Json Web Token (JWT) para realizar peticiones autenticadas.
@@ -55,7 +55,7 @@ password: **admin**
 
 Se genera un token con 1 hora de validez.
 
-![image](https://github.com/byruhs/nisum-user-api/blob/main/imgs/postman-token?raw=true)
+![image](https://github.com/byruhs/nisum-user-api/blob/main/imgs/postman-token.png?raw=true)
 
 ### /users/save
 Crea un usuario en la base de datos.
@@ -83,18 +83,18 @@ Crea un usuario en la base de datos.
 
 Si los datos enviados son correctos, se crea el usuario en la base de datos en memoria.
 
-![image](https://github.com/byruhs/nisum-user-api/blob/main/imgs/postman-save-user?raw=true)
+![image](https://github.com/byruhs/nisum-user-api/blob/main/imgs/postman-save-user.png?raw=true)
 
 **Ejemplo de Response con Error**
 
 Si los datos enviados tiene algun dato erroneo, se muestra mensaje de error.
 
-![image](https://github.com/byruhs/nisum-user-api/blob/main/imgs/postman-save-user-error?raw=true)
+![image](https://github.com/byruhs/nisum-user-api/blob/main/imgs/postman-save-user-error.png?raw=true)
 
 ***
 ## Diagrama de flujo
 
 Diagrama que muestra el flujo que se debe seguir para consumir el API Rest.
 
-![image](https://github.com/byruhs/nisum-user-api/blob/main/imgs/diagrama?raw=true)
+![image](https://github.com/byruhs/nisum-user-api/blob/main/imgs/diagrama.png?raw=true)
 
