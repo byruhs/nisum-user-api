@@ -7,8 +7,11 @@ import com.nisum.userapi.exception.InvalidPasswordException;
 import com.nisum.userapi.exception.UserException;
 import com.nisum.userapi.repository.UserRepository;
 import com.nisum.userapi.service.UserService;
+import com.nisum.userapi.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,13 +24,18 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${pasword.regexp}")
     private String paswordRegexp;
 
+    private final JwtTokenUtil jwtTokenUtil;
+
     @Autowired
-    public UserServiceImpl(final UserRepository userRepository) {
+    public UserServiceImpl(final UserRepository userRepository, JwtTokenUtil jwtTokenUtil) {
         this.userRepository = userRepository;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
@@ -38,9 +46,9 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = new UserEntity();
         userEntity.setName(userRequest.getName());
         userEntity.setEmail(userRequest.getEmail());
-        userEntity.setPassword(userRequest.getPassword());
+        userEntity.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         userEntity.setCreated(LocalDateTime.now());
-        userEntity.setToken("token");
+        userEntity.setToken(jwtTokenUtil.generateToken(userRequest.getEmail()));
         userEntity.setLastLogin(userEntity.getCreated());
         userEntity.setActive(true);
         userEntity.setPhones(userRequest.getPhones().stream().map(p -> new PhoneEntity(userEntity, p.getNumber(), p.getCityCode(), p.getCountryCode(), LocalDateTime.now())).collect(Collectors.toSet()));
